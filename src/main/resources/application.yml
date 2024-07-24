@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Intern_project
+
+  profiles:
+    include: dev
