@@ -7,6 +7,7 @@ import com.intern_project.record.domain.Symptom;
 import com.intern_project.record.dto.request.FollowupRecordRequestDTO;
 import com.intern_project.record.dto.request.InitialRecordRequestDTO;
 import com.intern_project.record.dto.request.RecordHistoryListRequestDTO;
+import com.intern_project.record.dto.response.RecordDetailResponseDTO;
 import com.intern_project.record.dto.response.RecordHistoryListResponseDTO;
 import com.intern_project.record.mapper.RecordMapper;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +56,10 @@ public class RecordService {
     public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecords(RecordHistoryListRequestDTO requestDTO) {
         List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.getRecordsByUserIdAndPainAreaAndYearMonth(1L, requestDTO.getPainArea(), requestDTO.getYearMonth());
         return BaseResponseDTO.createBaseResponseWithDataStatus200(recordsByUserIdAndByYearMonth);
+    }
+
+    public BaseResponseDTO<RecordDetailResponseDTO> getRecordDetail(Long recordId) {
+        RecordDetailResponseDTO recordDetail = recordMapper.getRecordsByRecordId(recordId);
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(recordDetail);
     }
 }

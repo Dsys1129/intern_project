@@ -44,4 +44,12 @@
         </if>
         AND DATE_FORMAT(pr.created_at, '%Y-%m') = #{yearMonth}
     </select>
+
+    <select id="getRecordsByRecordId" resultType="com.intern_project.record.dto.response.RecordDetailResponseDTO">
+        SELECT pr.id, prg.pain_area, prg.pain_area_detail, pr.pain_intensity, pr.note, pr.pain_start_time,
+               pr.pain_end_time, prg.start_date, prg.pain_duration
+        FROM pain_record pr
+                 INNER JOIN pain_record_groups prg ON pr.record_group_id = prg.id
+        WHERE pr.id = #{recordId}
+    </select>
 </mapper>

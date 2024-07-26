@@ -3,6 +3,7 @@ package com.intern_project.record.mapper;
 import com.intern_project.record.domain.Record;
 import com.intern_project.record.domain.RecordDetail;
 import com.intern_project.record.domain.Symptom;
+import com.intern_project.record.dto.response.RecordDetailResponseDTO;
 import com.intern_project.record.dto.response.RecordHistoryListResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,4 +20,6 @@ public interface RecordMapper {
     List<Symptom> getSymptoms();
 
     List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaAndYearMonth(Long userId, String painArea, String yearMonth);
+
+    RecordDetailResponseDTO getRecordsByRecordId(Long recordId);
 }
