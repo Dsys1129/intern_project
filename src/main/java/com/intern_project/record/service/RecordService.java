@@ -3,8 +3,11 @@ package com.intern_project.record.service;
 import com.intern_project.global.BaseResponseDTO;
 import com.intern_project.record.domain.Record;
 import com.intern_project.record.domain.RecordDetail;
+import com.intern_project.record.domain.Symptom;
 import com.intern_project.record.dto.request.FollowupRecordRequestDTO;
 import com.intern_project.record.dto.request.InitialRecordRequestDTO;
+import com.intern_project.record.dto.request.RecordHistoryListRequestDTO;
+import com.intern_project.record.dto.response.RecordHistoryListResponseDTO;
 import com.intern_project.record.mapper.RecordMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +45,15 @@ public class RecordService {
         List<Integer> symptoms = requestDTO.getSymptoms();
         recordMapper.saveSymptoms(recordDetail.getId(), symptoms);
         return BaseResponseDTO.createBaseResponseWithoutDataStatus201();
+    }
+
+    public BaseResponseDTO<List<Symptom>> getSymptoms() {
+        List<Symptom> symptomResults = recordMapper.getSymptoms();
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(symptomResults);
+    }
+
+    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecords(RecordHistoryListRequestDTO requestDTO) {
+        List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.getRecordsByUserIdAndPainAreaAndYearMonth(1L, requestDTO.getPainArea(), requestDTO.getYearMonth());
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(recordsByUserIdAndByYearMonth);
     }
 }

@@ -29,5 +29,19 @@
         </selectKey>
     </insert>
 
+    <select id="getSymptoms" resultType="com.intern_project.record.domain.Symptom">
+        SELECT id, symptom
+        FROM symptoms
+    </select>
 
+    <select id="getRecordsByUserIdAndPainAreaAndYearMonth" resultType="com.intern_project.record.dto.response.RecordHistoryListResponseDTO">
+        SELECT pr.id, pr.note, pr.pain_intensity, pr.pain_mood, pr.created_at
+        FROM pain_record pr
+        INNER JOIN pain_record_groups prg ON pr.record_group_id = prg.id
+        WHERE prg.user_id = #{userId}
+        <if test="painArea != null and painArea !=''">
+            AND prg.pain_area = #{painArea}
+        </if>
+        AND DATE_FORMAT(pr.created_at, '%Y-%m') = #{yearMonth}
+    </select>
 </mapper>
