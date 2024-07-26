@@ -5,6 +5,8 @@ import com.intern_project.user.domain.UserGroup;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     //새로운 계정 회원가입
@@ -20,7 +22,8 @@ public interface UserMapper {
     UserGroup findUserGroupByEmail(@Param("email") String email);
     //groupid로 계정찾기
     UserGroup findUserGroupById(@Param("id") int id);
-
+    //groupid로 사용자리스트 리턴하기
+    List<User> findUserListByGroupId(@Param("groupId") int groupId);
 
 
 }

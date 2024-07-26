@@ -7,6 +7,8 @@ import com.intern_project.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -75,5 +77,9 @@ public class UserService {
     // email로 그룹 아이디 찾기
     public UserGroup getUserGroupByEmail(String email) {
         return userMapper.findUserGroupByEmail(email);
+    }
+
+    public List<User> getUserListByGroupId(int groupId) {
+        return userMapper.findUserListByGroupId(groupId);
     }
 }

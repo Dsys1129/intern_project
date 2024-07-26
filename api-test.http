@@ -33,11 +33,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhd
 
 ###
 
-# Test Case 4: Check if the newly created user can successfully login
-POST http://localhost:8080/api/user/login
+# Test Case 4: 그룹 아이디에 해당하는 user list 조회
+GET http://localhost:8080/api/user/userList
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMTk3NzA2OSwiZXhwIjoxNzIxOTgwNjY5fQ.Ieu8h1IQgzILOoVbR2U-XMvfXTogovJBdxMhG6e2jXemfmWHGKWhQBo6-k4GbT7lCh_w_j-z9nOpDEFTtn7FVA
 
-{
-  "email": "testuser@example.com",
-  "password": "password123"
-}

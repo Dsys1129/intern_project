@@ -42,6 +42,10 @@
         SELECT * FROM user_groups WHERE id = #{id}
     </select>
 
+<!--    그룹 ID로 사용자 리스트 조회-->
+    <select id="findUserListByGroupId" resultMap="UserResultMap">
+        SELECT * FROM users WHERE group_id = #{groupId}
+    </select>
 
 
 </mapper>

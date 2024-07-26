@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
@@ -75,6 +77,44 @@ public class UserController {
         }
     }
 
+    @GetMapping("/userList")
+    public ResponseEntity<List<User>> getUserList() {
+        try{
+            Claims claims = (Claims) request.getAttribute("claims");
+            if(claims != null) {
+                int groupId = claims.get("groupId", Integer.class);
+                List<User> users = userService.getUserListByGroupId(groupId);
+                return ResponseEntity.ok(users);
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    // 새로운 메서드 (유저 변경)
+    @PostMapping("/changeUser")
+    public ResponseEntity<String> changeUser(@RequestBody ChangeUserRequest changeUserRequest) {
+        String newToken = jwtUtil.createToken(changeUserRequest.getGroupId(), changeUserRequest.getUserId());
+        return ResponseEntity.ok(newToken);
+    }
+
+
+//    @GetMapping("/userList")
+//    public ResponseEntity<List<User>> getUserList(Claims claims) {
+//        try{
+//            if(claims != null) {
+//                int groupId = claims.get("groupId", Integer.class);
+//                List<User> users = userService.getUserListByGroupId(groupId);
+//                return ResponseEntity.ok(users);
+//            }else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//            }
+//        }catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//        }
+//    }
 
 }
 
