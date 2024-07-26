@@ -1,0 +1,43 @@
+# Test Case 1: Register a new user group
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "newpassword123"
+}
+
+###
+
+# Test Case 2: Login with existing email and password
+POST http://localhost:8080/api/user/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "newpassword123"
+}
+
+###
+
+# Test Case 3: Create a new user using the token from login
+POST http://localhost:8080/api/user/createUser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZXd1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxOTU1ODU4LCJleHAiOjE3MjE5NTU4NTh9.XCQqkXilSAsrZle3cDHAFgwV2a6MdAIvGhfSH2a4UQbFe4b9AaXIm3abVzG9RoMOdR2gKSeFNEWs1D32lyDaig
+
+{
+  "name": "유동훈",
+  "gender": "male",
+  "birthDate": "2023-03"
+}
+
+###
+
+# Test Case 4: Check if the newly created user can successfully login
+POST http://localhost:8080/api/user/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}

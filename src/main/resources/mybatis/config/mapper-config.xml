@@ -4,4 +4,12 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+
+<!--    <typeAliases>-->
+<!--        <package name="com.intern_project"/>-->
+<!--    </typeAliases>-->
+<!--    <mappers>-->
+<!--        <mapper class="com.intern_project.user.mapper"/>-->
+<!--    </mappers>-->
+
 </configuration>
