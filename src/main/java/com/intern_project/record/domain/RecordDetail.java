@@ -20,7 +20,7 @@ public class RecordDetail {
 
     private Integer painIntensity;
 
-    private String painMood;
+    private Integer painMood;
 
     private String note;
 
@@ -28,7 +28,7 @@ public class RecordDetail {
 
     private LocalDateTime createdAt;
 
-    private RecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, String painMood, String note, boolean isInitialRecord, LocalDateTime createdAt) {
+    private RecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, boolean isInitialRecord, LocalDateTime createdAt) {
         this.recordGroupId = recordGroupId;
         this.symptoms = symptoms;
         this.painStartTime = painStartTime;
@@ -40,11 +40,11 @@ public class RecordDetail {
         this.createdAt = createdAt;
     }
 
-    public static RecordDetail createInitialRecordDetail(Long recordGroupId, List<Integer> symptoms, Integer painIntensity, String painMood, String note, LocalDateTime createdAt){
+    public static RecordDetail createInitialRecordDetail(Long recordGroupId, List<Integer> symptoms, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
         return new RecordDetail(recordGroupId, symptoms, null, null, painIntensity, painMood, note, true, createdAt);
     }
 
-    public static RecordDetail createFollowupRecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, String painMood, String note, LocalDateTime createdAt){
+    public static RecordDetail createFollowupRecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
         return new RecordDetail(recordGroupId, symptoms, painStartTime, painEndTime, painIntensity, painMood, note, false, createdAt);
     }
 }

@@ -30,13 +30,14 @@ public class FollowupRecordRequestDTO {
 
     @Schema(description = "통증의 정도", minimum = "0", maximum = "10")
     @Max(value = 10, message = "통증 정도는 0~10 입니다.")
-    @Positive(message = "통증 정도는 음수일 수 없습니다.")
+    @Min(value = 0, message = "통증 정도는 음수일 수 없습니다.")
     @NotNull(message = "통증 정도는 필수 입력 사항입니다.")
     private Integer painIntensity;
 
-    @Schema(description = "통증 기록 기분", allowableValues = {"나빠요", "우울해요", "좋아요"})
-    @NotBlank(message = "기분은 필수 입력 사항입니다.")
-    private String painMood;
+    @Min(value = 0, message = "통증 기록 기분은 음수일 수 없습니다.")
+    @Schema(description = "통증 기록 기분", allowableValues = {"0", "1", "2"})
+    @NotNull(message = "기분은 필수 입력 사항입니다.")
+    private Integer painMood;
 
     @Schema(description = "메모", defaultValue = "손끝이 저림")
     @Size(min = 1, max = 100, message = "메모는 최소 1자에서 100자 입니다.")

@@ -40,17 +40,20 @@ public class InitialRecordRequestDTO {
     @NotNull(message = "통증 정도는 필수 입력 사항입니다.")
     private Integer painIntensity;
 
+    @Min(value = 0, message = "통증 시작 양상은 음수일 수 없습니다.")
     @Schema(description = "통증 시작 양상", examples = {"갑자기","점진적으로"}, allowableValues = {"갑자기","점진적으로"})
-    @NotBlank(message = "통증 시작 양상은 필수 입력 사항입니다.")
-    private String painStartPattern;
+    @NotNull(message = "통증 시작 양상은 필수 입력 사항입니다.")
+    private Integer painStartPattern;
 
-    @Schema(description = "통증 지속 시간", allowableValues = {"일시적", "3분 이내", "5분 이상", "항상"})
-    @NotBlank(message = "통증 지속 시간은 필수 입력 사항입니다.")
-    private String painDuration;
+    @Min(value = 0, message = "통증 지속 시간은 음수일 수 없습니다.")
+    @Schema(description = "통증 지속 시간", allowableValues = {"0", "1", "2", "3"})
+    @NotNull(message = "통증 지속 시간은 필수 입력 사항입니다.")
+    private Integer painDuration;
 
-    @Schema(description = "통증 기록 기분", allowableValues = {"나빠요", "우울해요", "좋아요"})
-    @NotBlank(message = "기분은 필수 입력 사항입니다.")
-    private String painMood;
+    @Min(value = 0, message = "통증 기록 기분은 음수일 수 없습니다.")
+    @Schema(description = "통증 기록 기분", allowableValues = {"0", "1", "2"})
+    @NotNull(message = "기분은 필수 입력 사항입니다.")
+    private Integer painMood;
 
     @Schema(description = "메모", defaultValue = "손끝이 저림")
     @Size(min = 1, max = 100, message = "메모는 최소 1자에서 100자 입니다.")

@@ -17,11 +17,11 @@ public class Record {
 
     private LocalDateTime painStartDateTime;
 
-    private String painStartPattern;
+    private Integer painStartPattern;
 
-    private String painDuration;
+    private Integer painDuration;
 
-    public Record(Long userId, String painArea, Integer painAreaDetail,LocalDateTime painStartDateTime, String painStartPattern, String painDuration) {
+    public Record(Long userId, String painArea, Integer painAreaDetail,LocalDateTime painStartDateTime, Integer painStartPattern, Integer painDuration) {
         this.userId = userId;
         this.painArea = painArea;
         this.painAreaDetail = painAreaDetail;
