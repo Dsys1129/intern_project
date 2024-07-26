@@ -94,4 +94,31 @@
         </if>
         AND DATE_FORMAT(pr.created_at, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
     </select>
+
+    <select id="getLastSelectedSymptomsByGroupIdAndUserId" resultType="com.intern_project.record.domain.Symptom">
+        SELECT
+            s.id,
+            s.symptom
+        FROM
+            symptoms s
+                INNER JOIN
+            record_symptoms rs ON s.id = rs.symptom_id
+                INNER JOIN
+            pain_record pr ON rs.record_detail_id = pr.id
+                INNER JOIN
+            pain_record_groups prg ON pr.record_group_id = prg.id
+        WHERE
+            pr.id = (
+                SELECT
+                    pr_sub.id
+                FROM
+                    pain_record pr_sub
+                WHERE
+                    pr_sub.record_group_id = #{groupId}
+                ORDER BY
+                    pr_sub.created_at DESC
+            LIMIT 1
+            )
+          AND prg.user_id = #{userId};
+    </select>
 </mapper>

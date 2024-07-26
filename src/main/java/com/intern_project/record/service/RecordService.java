@@ -81,4 +81,9 @@ public class RecordService {
 
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }
+
+    public BaseResponseDTO<List<Symptom>> getLastSelectedSymptoms(Long groupId) {
+        List<Symptom> result = recordMapper.getLastSelectedSymptomsByGroupIdAndUserId(groupId, 1L);
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
+    }
 }

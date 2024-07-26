@@ -73,4 +73,10 @@ public class RecordController implements SwaggerApi{
         BaseResponseDTO<List<RecordHistoryListResponseDTO>> response = recordService.getRecordReportList(requestDTO);
         return ResponseEntity.status(response.getCode()).body(response);
     }
+
+    @GetMapping("/records/{groupId}/symptoms")
+    public ResponseEntity<BaseResponseDTO<List<Symptom>>> getLastSelectedSymptoms(@PathVariable Long groupId) {
+        BaseResponseDTO response = recordService.getLastSelectedSymptoms(groupId);
+        return ResponseEntity.status(response.getCode()).body(response);
+    }
 }

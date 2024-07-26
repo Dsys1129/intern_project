@@ -84,4 +84,15 @@ public interface SwaggerApi {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     ResponseEntity<BaseResponseDTO<List<RecordHistoryListResponseDTO>>> getRecordReportList(RecordReportListRequestDTO requestDTO);
+
+
+    @Operation(summary = "통증 재기록 시 마지막에 선택된 증상 리스트 조회", description = "통증 재기록 시 마지막에 선택된 증상 리스트 조회",
+            parameters = @Parameter(name = "groupId", description = "재기록 할 통증 기록 그룹 ID", required = true))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "통증 기록 리스트 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    ResponseEntity<BaseResponseDTO<List<Symptom>>> getLastSelectedSymptoms(Long groupId);
 }
