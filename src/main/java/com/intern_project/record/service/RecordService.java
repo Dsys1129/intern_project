@@ -7,6 +7,7 @@ import com.intern_project.record.domain.Symptom;
 import com.intern_project.record.dto.request.FollowupRecordRequestDTO;
 import com.intern_project.record.dto.request.InitialRecordRequestDTO;
 import com.intern_project.record.dto.request.RecordHistoryListRequestDTO;
+import com.intern_project.record.dto.request.RecordReportListRequestDTO;
 import com.intern_project.record.dto.response.RecordDetailResponseDTO;
 import com.intern_project.record.dto.response.RecordGroupListResponseDTO;
 import com.intern_project.record.dto.response.RecordGroupResponseDTO;
@@ -69,6 +70,14 @@ public class RecordService {
         List<RecordGroupListResponseDTO> recordGroupsByUserId = recordMapper.getRecordGroupsByUserId(1L);
         RecordGroupResponseDTO result = recordMapper.getTotalPainRecordsAndLastDateByUserId(1L);
         result.setGroups(recordGroupsByUserId);
+
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
+    }
+
+    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecordReportList(RecordReportListRequestDTO requestDTO) {
+        List<RecordHistoryListResponseDTO> result = recordMapper.
+                getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(1L, requestDTO.getPainArea(),
+                        requestDTO.getStartDate(), requestDTO.getEndDate());
 
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }

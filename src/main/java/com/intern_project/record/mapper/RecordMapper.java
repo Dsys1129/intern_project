@@ -28,4 +28,6 @@ public interface RecordMapper {
     List<RecordGroupListResponseDTO> getRecordGroupsByUserId(Long userId);
 
     RecordGroupResponseDTO getTotalPainRecordsAndLastDateByUserId(Long userId);
+
+    List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(Long userId, String painArea, String startDate, String endDate);
 }
