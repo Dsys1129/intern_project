@@ -70,12 +70,14 @@
     <select id="getTotalPainRecordsAndLastDateByUserId"
             resultType="com.intern_project.record.dto.response.RecordGroupResponseDTO">
         SELECT
+            u.name,
             COUNT(pr.id) AS total_record_count,
             DATEDIFF(CURDATE(), MAX(pr.created_at)) AS days_since_last_record
         FROM
             pain_record_groups prg
                 INNER JOIN
             pain_record pr ON prg.id = pr.record_group_id
+            INNER JOIN users u ON prg.user_id = u.id
         WHERE user_id = #{userId}
         GROUP BY
             prg.user_id;
