@@ -4,6 +4,8 @@ import com.intern_project.record.domain.Record;
 import com.intern_project.record.domain.RecordDetail;
 import com.intern_project.record.domain.Symptom;
 import com.intern_project.record.dto.response.RecordDetailResponseDTO;
+import com.intern_project.record.dto.response.RecordGroupListResponseDTO;
+import com.intern_project.record.dto.response.RecordGroupResponseDTO;
 import com.intern_project.record.dto.response.RecordHistoryListResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,4 +24,8 @@ public interface RecordMapper {
     List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaAndYearMonth(Long userId, String painArea, String yearMonth);
 
     RecordDetailResponseDTO getRecordsByRecordId(Long recordId);
+
+    List<RecordGroupListResponseDTO> getRecordGroupsByUserId(Long userId);
+
+    RecordGroupResponseDTO getTotalPainRecordsAndLastDateByUserId(Long userId);
 }

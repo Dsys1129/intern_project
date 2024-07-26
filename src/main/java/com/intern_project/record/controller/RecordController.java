@@ -59,4 +59,11 @@ public class RecordController implements SwaggerApi{
         BaseResponseDTO<RecordDetailResponseDTO> response = recordService.getRecordDetail(recordId);
         return ResponseEntity.status(response.getCode()).body(response);
     }
+
+    @Override
+    @GetMapping("/")
+    public ResponseEntity<BaseResponseDTO<RecordGroupResponseDTO>> getRecordGroups() {
+        BaseResponseDTO<RecordGroupResponseDTO> response = recordService.getRecordGroups();
+        return ResponseEntity.status(response.getCode()).body(response);
+    }
 }

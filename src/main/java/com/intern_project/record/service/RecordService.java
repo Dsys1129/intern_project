@@ -8,6 +8,8 @@ import com.intern_project.record.dto.request.FollowupRecordRequestDTO;
 import com.intern_project.record.dto.request.InitialRecordRequestDTO;
 import com.intern_project.record.dto.request.RecordHistoryListRequestDTO;
 import com.intern_project.record.dto.response.RecordDetailResponseDTO;
+import com.intern_project.record.dto.response.RecordGroupListResponseDTO;
+import com.intern_project.record.dto.response.RecordGroupResponseDTO;
 import com.intern_project.record.dto.response.RecordHistoryListResponseDTO;
 import com.intern_project.record.mapper.RecordMapper;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +63,13 @@ public class RecordService {
     public BaseResponseDTO<RecordDetailResponseDTO> getRecordDetail(Long recordId) {
         RecordDetailResponseDTO recordDetail = recordMapper.getRecordsByRecordId(recordId);
         return BaseResponseDTO.createBaseResponseWithDataStatus200(recordDetail);
+    }
+
+    public BaseResponseDTO<RecordGroupResponseDTO> getRecordGroups() {
+        List<RecordGroupListResponseDTO> recordGroupsByUserId = recordMapper.getRecordGroupsByUserId(1L);
+        RecordGroupResponseDTO result = recordMapper.getTotalPainRecordsAndLastDateByUserId(1L);
+        result.setGroups(recordGroupsByUserId);
+
+        return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }
 }

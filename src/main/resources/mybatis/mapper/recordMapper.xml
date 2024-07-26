@@ -52,4 +52,32 @@
                  INNER JOIN pain_record_groups prg ON pr.record_group_id = prg.id
         WHERE pr.id = #{recordId}
     </select>
+
+    <select id="getRecordGroupsByUserId" resultType="com.intern_project.record.dto.response.RecordGroupListResponseDTO">
+        SELECT prg.id AS record_group_id,
+               prg.pain_area,
+               COUNT(pr.id) AS total_detail_count,
+               MAX(pr.created_at) AS last_recorded_date
+        FROM
+            pain_record_groups prg
+                INNER JOIN
+            pain_record pr ON prg.id = pr.record_group_id
+        WHERE prg.user_id = #{userId}
+        GROUP BY
+            prg.id;
+    </select>
+
+    <select id="getTotalPainRecordsAndLastDateByUserId"
+            resultType="com.intern_project.record.dto.response.RecordGroupResponseDTO">
+        SELECT
+            COUNT(pr.id) AS total_record_count,
+            DATEDIFF(CURDATE(), MAX(pr.created_at)) AS days_since_last_record
+        FROM
+            pain_record_groups prg
+                INNER JOIN
+            pain_record pr ON prg.id = pr.record_group_id
+        WHERE user_id = #{userId}
+        GROUP BY
+            prg.user_id;
+    </select>
 </mapper>
