@@ -40,8 +40,16 @@ public class JwtFilter extends OncePerRequestFilter {
                 Claims claims = jwtUtil.getClaimsFromToken(token);
                 if (claims != null && !jwtUtil.isTokenExpired(token)) {
                     // 요청 속성에 클레임을 설정하여 애플리케이션 내에서 사용할 수 있도록 합니다.
-                    log.debug("JwtFilter: Valid token, setting claims in request");
-                    request.setAttribute("claims", claims);
+                    int groupId = claims.get("groupId", Integer.class);
+                    int userId = claims.get("userId", Integer.class);
+                    if (jwtUtil.validateToken(token,groupId,userId)) {
+                        log.debug("JwtFilter: Valid token, setting claims in request");
+                        request.setAttribute("claims", claims);
+                    } else {
+                        log.debug("JwtFilter: Invalid token");
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                        return;
+                    }
                 } else {
                     log.debug("JwtFilter: Token is expired");
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is expired");

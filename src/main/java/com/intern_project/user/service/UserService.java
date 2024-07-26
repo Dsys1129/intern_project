@@ -53,7 +53,7 @@ public class UserService {
     }
 
     // 그룹 ID로 UserGroup 찾기
-    public UserGroup findUserGroupById(Long id) {
+    public UserGroup findUserGroupById(int id) {
         return userMapper.findUserGroupById(id);
     }
 
@@ -63,14 +63,14 @@ public class UserService {
     }
 
 
-    // 토큰에서 UserGroup 가져오기
-    public UserGroup getUserGroupFromToken(String token) {
-        String email = jwtUtil.getEmailFromToken(token);
-        if (email != null) {
-            return userMapper.findUserGroupByEmail(email);
-        }
-        return null;
-    }
+//    // 토큰에서 UserGroup 가져오기
+//    public UserGroup getUserGroupFromToken(String token) {
+//        String email = jwtUtil.getEmailFromToken(token);
+//        if (email != null) {
+//            return userMapper.findUserGroupByEmail(email);
+//        }
+//        return null;
+//    }
 
     // email로 그룹 아이디 찾기
     public UserGroup getUserGroupByEmail(String email) {

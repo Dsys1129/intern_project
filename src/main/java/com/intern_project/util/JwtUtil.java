@@ -6,6 +6,8 @@ import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -15,18 +17,17 @@ public class JwtUtil {
     private long expiration = 1000 * 60 * 60; // 1시간
 
     // 이메일을 담은 JWT 토큰 생성
-    public String createToken(String email) {
+    public String createToken(int groupId, int userId) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("groupId", groupId);
+        claims.put("userId", userId);
+
         return Jwts.builder()
-                .setSubject(email)
+                .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
-    }
-
-    // JWT 토큰에서 이메일 추출
-    public String getEmailFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
     }
 
     // JWT 토큰에서 클레임을 추출
@@ -43,9 +44,12 @@ public class JwtUtil {
         return expirationDate.before(new Date());
     }
 
-    // JWT 토큰의 유효성 검사 (이메일과 만료 여부)
-    public boolean validateToken(String token, String email) {
-        String tokenEmail = getEmailFromToken(token);
-        return tokenEmail.equals(email) && !isTokenExpired(token);
+    // JWT 토큰의 유효성 검사
+    public boolean validateToken(String token, int groupId, int userId) {
+        final Claims claims = getClaimsFromToken(token);
+        final int tokenGroupId = claims.get("groupId", Integer.class);
+        final int tokenUserId = claims.get("userId", Integer.class);
+        return (groupId == tokenGroupId && userId == tokenUserId && !isTokenExpired(token));
     }
+
 }

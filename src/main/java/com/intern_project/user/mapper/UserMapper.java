@@ -19,7 +19,7 @@ public interface UserMapper {
     //이메일로 계정찾기
     UserGroup findUserGroupByEmail(@Param("email") String email);
     //groupid로 계정찾기
-    UserGroup findUserGroupById(@Param("id") Long id);
+    UserGroup findUserGroupById(@Param("id") int id);
 
 
 

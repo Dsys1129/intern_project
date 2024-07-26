@@ -1,5 +1,6 @@
 package com.intern_project.user.controller;
 
+import com.intern_project.user.domain.ChangeUserRequest;
 import com.intern_project.user.domain.LoginRequest;
 import com.intern_project.user.domain.User;
 import com.intern_project.user.domain.UserGroup;
@@ -43,10 +44,12 @@ public class UserController {
         user = userService.UserExist(loginRequest.getEmail(), loginRequest.getPassword());
 
         if (user != null) {
-            String token = jwtUtil.createToken(loginRequest.getEmail());
+            int groupId = userGroup.getId();
+            int userId = user.getId();
+            String token = jwtUtil.createToken(groupId, userId);
             return ResponseEntity.ok(token);
         } else {
-            // 유저 없음 메세지 전달
+            // 유저 없음 메세지와 null user 생성해서 보내기
             return null;
         }
     }
@@ -57,12 +60,13 @@ public class UserController {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             if (claims != null) {
-                String email = claims.getSubject();
-                UserGroup userGroup = userService.getUserGroupByEmail(email);
+                int groupId = claims.get("groupId", Integer.class);
+                int userId = claims.get("userId", Integer.class);
+                UserGroup userGroup = userService.findUserGroupById(groupId);
                 if (userGroup != null) {
                     user.setGroupId(userGroup.getId());
                     userService.createUser(user);
-                    return ResponseEntity.ok(jwtUtil.createToken(userGroup.getEmail()));
+                    return ResponseEntity.ok(jwtUtil.createToken(userGroup.getId(), user.getId()));
                 }
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token or UserGroup not found");
