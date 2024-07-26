@@ -32,6 +32,11 @@ public class RecordController implements SwaggerApi{
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
+    @Override
+    @PostMapping("/records/{groupId}")
+    public ResponseEntity<BaseResponseDTO> createFollowupRecord(@PathVariable Long groupId, @Valid @RequestBody FollowupRecordRequestDTO requestDTO) {
+        BaseResponseDTO response = recordService.createFollowupRecord(groupId, requestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
 }

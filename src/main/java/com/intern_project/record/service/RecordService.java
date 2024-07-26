@@ -3,6 +3,7 @@ package com.intern_project.record.service;
 import com.intern_project.global.BaseResponseDTO;
 import com.intern_project.record.domain.Record;
 import com.intern_project.record.domain.RecordDetail;
+import com.intern_project.record.dto.request.FollowupRecordRequestDTO;
 import com.intern_project.record.dto.request.InitialRecordRequestDTO;
 import com.intern_project.record.mapper.RecordMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,15 @@ public class RecordService {
         RecordDetail recordDetail = requestDTO.toRecordDetail(record.getId(), LocalDateTime.now());
         recordMapper.saveRecordDetail(recordDetail);
 
+        List<Integer> symptoms = requestDTO.getSymptoms();
+        recordMapper.saveSymptoms(recordDetail.getId(), symptoms);
+        return BaseResponseDTO.createBaseResponseWithoutDataStatus201();
+    }
+
+    @Transactional
+    public BaseResponseDTO createFollowupRecord(Long recordGroupId, FollowupRecordRequestDTO requestDTO) {
+        RecordDetail recordDetail = requestDTO.toRecordDetail(recordGroupId, LocalDateTime.now());
+        recordMapper.saveRecordDetail(recordDetail);
         List<Integer> symptoms = requestDTO.getSymptoms();
         recordMapper.saveSymptoms(recordDetail.getId(), symptoms);
         return BaseResponseDTO.createBaseResponseWithoutDataStatus201();
