@@ -1,0 +1,42 @@
+# Test Case 1: Register a new user group
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "newpassword123"
+}
+
+###
+
+# Test Case 2: Login with existing email and password
+POST http://localhost:8080/api/user/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "newpassword123"
+}
+
+###
+
+# Test Case 3: Create a new user using the token from login
+POST http://localhost:8080/api/user/createUser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzNjAxOCwiZXhwIjoxNzIyMjM5NjE4fQ.00nykkDvp25hz9Z42ctgl8oMUnOsLfKmvnRgHFp580x9FmfscYE7YpaLdR_JbIoqAuSjX8zYjQiRi8_QesxsGA
+
+{
+  "name": "동훈",
+  "gender": "male",
+  "birthDate": "2023-03"
+}
+
+###
+
+# Test Case 4: 그룹 아이디에 해당하는 user list 조회
+GET http://localhost:8080/api/user/userList
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzMTYxMiwiZXhwIjoxNzIyMjM1MjEyfQ.eTZAsx1C_S1c-VyvfZTHzod6E-beweZVjLfJrxA_WuUdMUe2m8XzIj0MAC6cRVj17O9zQE4FM5F5hYKseFAGBQ
+###
+
+GET http://localhost:8080/swagger-ui/api-docs
