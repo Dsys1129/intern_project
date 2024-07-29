@@ -1,9 +1,8 @@
 package com.intern_project.user.domain;
 
-
 public class User {
-    private int id;
-    private int group_id;
+    private Long id;
+    private Long group_id;
     private String image;
     private String name;
     private String gender;
@@ -12,19 +11,19 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getGroupId() {
+    public Long getGroupId() {
         return group_id;
     }
 
-    public void setGroupId(int group_id) {
+    public void setGroupId(Long group_id) {
         this.group_id = group_id;
     }
 

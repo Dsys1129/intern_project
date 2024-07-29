@@ -1,5 +1,6 @@
 package com.intern_project.util;
 
+import com.intern_project.user.domain.UserInfo;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/user/login","/api/user/register"};
+        String[] excludePath = {
+                "/api/user/login",
+                "/api/user/register",
+                "/swagger-ui/api-docs",
+                "/v3/api-docs",
+                "/swagger-ui",
+                "/swagger-ui.html",
+                "/api-docs"
+        };
         String path = request.getRequestURI();
+        log.debug("Request URI: " + path);
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 
@@ -40,11 +50,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 Claims claims = jwtUtil.getClaimsFromToken(token);
                 if (claims != null && !jwtUtil.isTokenExpired(token)) {
                     // 요청 속성에 클레임을 설정하여 애플리케이션 내에서 사용할 수 있도록 합니다.
-                    int groupId = claims.get("groupId", Integer.class);
-                    int userId = claims.get("userId", Integer.class);
+                    Long groupId = claims.get("groupId", Long.class);
+                    Long userId = claims.get("userId", Long.class);
+                    UserInfo userinfo = new UserInfo(groupId, userId);
+
                     if (jwtUtil.validateToken(token,groupId,userId)) {
                         log.debug("JwtFilter: Valid token, setting claims in request");
-                        request.setAttribute("claims", claims);
+                        //userinfo를 request에 set
+                        request.setAttribute("userinfo" , userinfo);
                     } else {
                         log.debug("JwtFilter: Invalid token");
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
@@ -56,6 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     return;
                 }
             } catch (Exception e) {
+
                 log.debug("JwtFilter: Invalid token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;

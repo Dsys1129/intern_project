@@ -55,7 +55,7 @@ public class UserService {
     }
 
     // 그룹 ID로 UserGroup 찾기
-    public UserGroup findUserGroupById(int id) {
+    public UserGroup findUserGroupById(Long id) {
         return userMapper.findUserGroupById(id);
     }
 
@@ -79,7 +79,7 @@ public class UserService {
         return userMapper.findUserGroupByEmail(email);
     }
 
-    public List<User> getUserListByGroupId(int groupId) {
+    public List<User> getUserListByGroupId(Long groupId) {
         return userMapper.findUserListByGroupId(groupId);
     }
 }

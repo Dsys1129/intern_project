@@ -16,8 +16,8 @@ public class JwtUtil {
     private String secret = "valnaslnalsknlnsalkvnlkanslkndlrknwlnalsknaSSADVAVASZXCVSAADFvalnaslnalsknlnsalkvnlkanslkndlrknwlnalsknaSSADVAVASZXCVSAADF";
     private long expiration = 1000 * 60 * 60; // 1시간
 
-    // 이메일을 담은 JWT 토큰 생성
-    public String createToken(int groupId, int userId) {
+    //토큰 생성
+    public String createToken(Long groupId, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("groupId", groupId);
         claims.put("userId", userId);
@@ -45,10 +45,10 @@ public class JwtUtil {
     }
 
     // JWT 토큰의 유효성 검사
-    public boolean validateToken(String token, int groupId, int userId) {
+    public boolean validateToken(String token, Long groupId, Long userId) {
         final Claims claims = getClaimsFromToken(token);
-        final int tokenGroupId = claims.get("groupId", Integer.class);
-        final int tokenUserId = claims.get("userId", Integer.class);
+        final long tokenGroupId = claims.get("groupId", Long.class);
+        final long tokenUserId = claims.get("userId", Long.class);
         return (groupId == tokenGroupId && userId == tokenUserId && !isTokenExpired(token));
     }
 

@@ -17,13 +17,13 @@ public interface UserMapper {
     //사용자 추가, 찾기
     void insertUser(User user);
     //1번 유저 리턴
-    User findFirstUserByGroupId(@Param("groupId") int groupId);
+    User findFirstUserByGroupId(@Param("groupId") Long groupId);
     //이메일로 계정찾기
     UserGroup findUserGroupByEmail(@Param("email") String email);
     //groupid로 계정찾기
-    UserGroup findUserGroupById(@Param("id") int id);
+    UserGroup findUserGroupById(@Param("id") Long id);
     //groupid로 사용자리스트 리턴하기
-    List<User> findUserListByGroupId(@Param("groupId") int groupId);
+    List<User> findUserListByGroupId(@Param("groupId") Long groupId);
 
 
 }

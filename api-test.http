@@ -23,10 +23,10 @@ Content-Type: application/json
 # Test Case 3: Create a new user using the token from login
 POST http://localhost:8080/api/user/createUser
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMTk2MTgyOCwiZXhwIjoxNzIxOTY1NDI4fQ.rc-pIzcH9W61RtPr9-1NZdzFmugV1yf7Jpgl5TRCsld5BcAPBM5_dbcXQOcd2A7fNIZF0I5MMOcRjviuKlmveg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzMjM2NiwiZXhwIjoxNzIyMjM1OTY2fQ.kCMRw1LSJ7Jkl1Z5gJC1cG17avtOF9M40NNwvWjuFPLGJ-OaiMIvQJyqYXXcAIolkAKkFkCW1xMVdKqFNYbJjA
 
 {
-  "name": "유동훈",
+  "name": "제갈동훈",
   "gender": "male",
   "birthDate": "2023-03"
 }
@@ -36,5 +36,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhd
 # Test Case 4: 그룹 아이디에 해당하는 user list 조회
 GET http://localhost:8080/api/user/userList
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMTk3NzA2OSwiZXhwIjoxNzIxOTgwNjY5fQ.Ieu8h1IQgzILOoVbR2U-XMvfXTogovJBdxMhG6e2jXemfmWHGKWhQBo6-k4GbT7lCh_w_j-z9nOpDEFTtn7FVA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzMTYxMiwiZXhwIjoxNzIyMjM1MjEyfQ.eTZAsx1C_S1c-VyvfZTHzod6E-beweZVjLfJrxA_WuUdMUe2m8XzIj0MAC6cRVj17O9zQE4FM5F5hYKseFAGBQ
+###
 
+GET http://localhost:8080/swagger-ui/api-docs

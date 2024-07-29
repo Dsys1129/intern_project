@@ -1,9 +1,6 @@
 package com.intern_project.user.controller;
 
-import com.intern_project.user.domain.ChangeUserRequest;
-import com.intern_project.user.domain.LoginRequest;
-import com.intern_project.user.domain.User;
-import com.intern_project.user.domain.UserGroup;
+import com.intern_project.user.domain.*;
 import com.intern_project.user.service.UserService;
 import com.intern_project.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -12,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController implements SwaggerApi{
 
     @Autowired
     private UserService userService;
@@ -46,8 +44,8 @@ public class UserController {
         user = userService.UserExist(loginRequest.getEmail(), loginRequest.getPassword());
 
         if (user != null) {
-            int groupId = userGroup.getId();
-            int userId = user.getId();
+            Long groupId = userGroup.getId();
+            Long userId = user.getId();
             String token = jwtUtil.createToken(groupId, userId);
             return ResponseEntity.ok(token);
         } else {
@@ -58,18 +56,15 @@ public class UserController {
 
     //사용자 생성
     @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<String> createUser(@RequestBody User user, @RequestAttribute("userinfo") UserInfo userInfo) {
         try {
-            Claims claims = (Claims) request.getAttribute("claims");
-            if (claims != null) {
-                int groupId = claims.get("groupId", Integer.class);
-                int userId = claims.get("userId", Integer.class);
-                UserGroup userGroup = userService.findUserGroupById(groupId);
-                if (userGroup != null) {
-                    user.setGroupId(userGroup.getId());
-                    userService.createUser(user);
-                    return ResponseEntity.ok(jwtUtil.createToken(userGroup.getId(), user.getId()));
-                }
+            Long groupId = userInfo.getGroupId();
+            Long userId = userInfo.getUserId();
+            UserGroup userGroup = userService.findUserGroupById(groupId);
+            if (userGroup != null) {
+                user.setGroupId(userGroup.getId());
+                userService.createUser(user);
+                return ResponseEntity.ok(jwtUtil.createToken(userGroup.getId(), user.getId()));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token or UserGroup not found");
         } catch (RuntimeException e) {
@@ -78,27 +73,23 @@ public class UserController {
     }
 
     @GetMapping("/userList")
-    public ResponseEntity<List<User>> getUserList() {
-        try{
-            Claims claims = (Claims) request.getAttribute("claims");
-            if(claims != null) {
-                int groupId = claims.get("groupId", Integer.class);
-                List<User> users = userService.getUserListByGroupId(groupId);
-                return ResponseEntity.ok(users);
-            }else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-        }catch (Exception e) {
+    public ResponseEntity<List<User>> getUserList(@RequestAttribute("userinfo") UserInfo userInfo) {
+        try {
+            Long groupId = userInfo.getGroupId();
+            List<User> users = userService.getUserListByGroupId(groupId);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
-    // 새로운 메서드 (유저 변경)
+
     @PostMapping("/changeUser")
     public ResponseEntity<String> changeUser(@RequestBody ChangeUserRequest changeUserRequest) {
         String newToken = jwtUtil.createToken(changeUserRequest.getGroupId(), changeUserRequest.getUserId());
         return ResponseEntity.ok(newToken);
     }
+
 
 
 //    @GetMapping("/userList")

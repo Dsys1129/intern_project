@@ -2,23 +2,23 @@ package com.intern_project.user.domain;
 
 public class ChangeUserRequest
 {
-    private int groupId;
-    private int userId;
+    private Long groupId;
+    private Long userId;
 
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public int getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 }

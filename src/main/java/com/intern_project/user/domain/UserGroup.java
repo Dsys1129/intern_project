@@ -1,18 +1,18 @@
 package com.intern_project.user.domain;
 
 public class UserGroup {
-    private int id;
+    private Long id;
     private String email;
     private String password;
 
     public UserGroup() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
