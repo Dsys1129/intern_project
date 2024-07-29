@@ -1,6 +1,6 @@
-package com.intern_project.config;
+package com.intern_project.global.config;
 
-import com.intern_project.util.JwtFilter;
+import com.intern_project.global.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

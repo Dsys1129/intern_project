@@ -1,4 +1,4 @@
-package com.intern_project.util;
+package com.intern_project.global.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

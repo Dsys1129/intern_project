@@ -1,4 +1,4 @@
-package com.intern_project.config;
+package com.intern_project.global.config;
 
 import com.intern_project.user.domain.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;

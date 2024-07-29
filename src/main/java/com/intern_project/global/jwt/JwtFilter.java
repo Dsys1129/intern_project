@@ -1,4 +1,4 @@
-package com.intern_project.util;
+package com.intern_project.global.jwt;
 
 import com.intern_project.user.domain.UserInfo;
 import io.jsonwebtoken.Claims;
@@ -18,22 +18,6 @@ import java.util.Arrays;
 @Slf4j
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {
-                "/api/user/login",
-                "/api/user/register",
-                "/swagger-ui/api-docs",
-                "/v3/api-docs",
-                "/swagger-ui",
-                "/swagger-ui.html",
-                "/api-docs"
-        };
-        String path = request.getRequestURI();
-        log.debug("Request URI: " + path);
-        return Arrays.stream(excludePath).anyMatch(path::startsWith);
-    }
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -81,5 +65,21 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {
+                "/api/user/login",
+                "/api/user/register",
+                "/swagger-ui/api-docs",
+                "/v3/api-docs",
+                "/swagger-ui",
+                "/swagger-ui.html",
+                "/api-docs"
+        };
+        String path = request.getRequestURI();
+        log.debug("Request URI: " + path);
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }

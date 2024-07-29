@@ -1,5 +1,6 @@
 package com.intern_project.global.exception;
 
+import com.intern_project.global.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> exceptionHandler(BindException e) {
+    public ResponseEntity<ErrorResponse> exceptionHandler(BindException e) {
         log.error("BindException : {}", e);
         Map<String, String> errors = new HashMap<>();
 
@@ -24,10 +25,8 @@ public class GlobalExceptionHandler {
                 errors.put(fieldError.getField(), fieldError.getDefaultMessage())
         );
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Validation failed");
-        response.put("errors", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Failed", errors);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -37,25 +36,25 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Validation failed");
-        response.put("errors", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        e.getBindingResult().getFieldErrors().forEach(fieldError ->
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage())
+        );
+
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Failed", errors);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> exceptionHandler(RuntimeException e) {
         log.error("RuntimeException : {}", e);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> exceptionHandler(Exception e) {
         log.error("Server Error : {}", e);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Server Error");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        ErrorResponse response = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error", null);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

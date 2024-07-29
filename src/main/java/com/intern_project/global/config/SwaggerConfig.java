@@ -1,4 +1,4 @@
-package com.intern_project.config;
+package com.intern_project.global.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
