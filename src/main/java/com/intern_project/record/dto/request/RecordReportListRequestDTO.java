@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 public class RecordReportListRequestDTO {
 
+    @NotNull(message = "통증 부위는 필수 입력 사항입니다.")
     private String painArea;
 
     @NotNull(message = "조회 시작 날짜는 필수 입력 사항입니다.")

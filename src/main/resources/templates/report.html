@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic PDF Generation</title>
+    <script src="/js/jspdf.umd.min.js"></script>
+    <script src="/js/html2canvas.min.js"></script>
+    <script src="/js/chart.js"></script>
+    <script src="/js/chartjs-plugin-annotation.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #pain-level-chart {
+            width: 800px; /* 고정된 너비 */
+            height: 400px; /* 고정된 높이 */
+            padding: 20px;
+            border-radius: 5px;
+            overflow: hidden; /* 넘치는 내용 숨기기 */
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        .emotion-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end; /* Align rows at the bottom */
+            width: 800px; /* 고정된 너비 */
+        }
+
+        .emotion-row-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align boxes horizontally */
+            margin: 0 10px;
+            min-width: 60px; /* 감정 컨테이너의 최소 너비 */
+        }
+
+        .emotion-row {
+            display: flex;
+            flex-direction: column-reverse; /* 감정 박스를 역순으로 표시 */
+            align-items: center; /* Center align boxes horizontally */
+        }
+
+        .emotion-box {
+            width: 20px;
+            height: 20px;
+            margin: 2px 0;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .gray {
+            background-color: gray;
+        }
+
+        .date-label {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        #records {
+            list-style: none; /* 리스트 스타일 제거 */
+            padding: 0;
+            margin: 0;
+        }
+
+        #records li {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .record-details {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .record-date {
+            width: 120px; /* 왼쪽에 고정된 너비 */
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .record-note {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .record-mood-and-intensity {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: -30px; /* 노트 위에 위치 */
+            left: 0;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .mood-sticker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .intensity {
+            font-weight: bold;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <h2 th:text="'통증 부위: ' + ${request.painArea}">통증 부위</h2>
+    <p th:text="'조회 기간: ' + ${request.startDate} + ' ~ ' + ${request.endDate}">조회 기간</p>
+
+    <div id="pain-level-chart">
+        <canvas id="myChart" width="800" height="400"></canvas>
+    </div>
+
+    <h3>감정 변화</h3>
+    <div id="emotion-chart" class="emotion-container"></div>
+</div>
+
+<ul id="records">
+    <li th:each="record : ${data}">
+        <div class="record-details">
+            <div class="record-date" th:text="${record.createdAt}"></div>
+            <div class="record-note">
+                <div th:text="${record.note}"></div>
+                <div class="record-mood-and-intensity">
+                    <div class="mood-sticker" th:style="'background-color:' + ${record.painMood}"></div>
+                    <div class="intensity" th:text="${record.painIntensity}"></div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+</body>
+<script th:inline="javascript">
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Convert Thymeleaf data to JavaScript object
+        const records = [[${data}]];
+
+        createPainLevelChart(records);
+
+        createMoodChart(records);
+    });
+
+    function createPainLevelChart(records) {
+        // 날짜별 평균 통증 레벨 계산
+        const datePainLevels = records.reduce((acc, record) => {
+            const dateKey = record.createdAt.substring(5, 10);
+            if (!acc[dateKey]) {
+                acc[dateKey] = [];
+            }
+            acc[dateKey].push(record.painIntensity);
+            return acc;
+        }, {});
+
+        // 날짜별 평균값 계산
+        const labels = [];
+        const dataValues = [];
+        for (const [dateKey, levels] of Object.entries(datePainLevels)) {
+            labels.push(dateKey);
+            const averageLevel = levels.reduce((sum, level) => sum + level, 0) / levels.length;
+            dataValues.push(averageLevel);
+        }
+
+        // Sort by date to ensure correct ordering
+        const sortedIndices = labels.map((date, index) => ({date, index}))
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .map(({index}) => index);
+        const sortedLabels = sortedIndices.map(index => labels[index]);
+        const sortedDataValues = sortedIndices.map(index => dataValues[index]);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedLabels,
+                datasets: [{
+                    label: 'dataset',
+                    data: sortedDataValues,
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    fill: false, // 선 아래 영역 채우지 않는다.
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    annotation: {
+                        annotations: {
+                            backgroundColorTopHalf: {
+                                type: 'box',
+                                xScaleID: 'x',
+                                yScaleID: 'y',
+                                xMin: 0,
+                                xMax: 31,
+                                yMin: 5,
+                                yMax: 10,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderWidth: 0,
+                            },
+                        },
+                    },
+                },
+                spanGaps: true,
+                elements: {
+                    point: {
+                        pointStyle: 'line'
+                    }
+                },
+                responsive: false, // 반응형 비활성화
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function createMoodChart(records) {
+        const startDate = new Date([[${request.startDate}]]);
+        const endDate = new Date([[${request.endDate}]]);
+        const startDay = startDate.getDate();
+        const endDay = endDate.getDate();
+        const daysCount = endDay - startDay + 1;
+
+        const emotionsGroup = records.reduce((acc, record) => {
+            const dateKey = record.createdAt.substring(5, 10);
+
+            if (!acc[dateKey]) {
+                acc[dateKey] = [];
+            }
+
+            acc[dateKey].push(record.painMood);
+            return acc;
+        }, {});
+
+        // 감정 색상 매핑
+        const emotionColors = {
+            0: 'red',    // 감정 0: 빨간색
+            1: 'yellow', // 감정 1: 노란색
+            2: 'green'   // 감정 2: 초록색
+        };
+
+        // 감정 박스 생성
+        const emotionChart = document.getElementById('emotion-chart');
+
+        for (let i = 0; i < daysCount; i++) {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + i);
+            const dateKey = currentDate.toISOString().substring(5, 10);
+
+            const emotionRowContainer = document.createElement('div');
+            emotionRowContainer.className = 'emotion-row-container'; // 날짜와 감정 박스를 포함하는 컨테이너
+
+            const emotionRow = document.createElement('div');
+            emotionRow.className = 'emotion-row'; // 감정 박스 컨테이너
+
+            // 감정 데이터가 있는 경우
+            if (emotionsGroup[dateKey]) {
+                const moods = emotionsGroup[dateKey];
+                moods.forEach(mood => {
+                    const emotionBox = document.createElement('div');
+                    emotionBox.className = 'emotion-box';
+                    emotionBox.style.backgroundColor = emotionColors[mood];
+                    emotionRow.appendChild(emotionBox);
+                });
+            } else {
+                // 감정 데이터가 없는 경우 회색 박스 추가
+                const emotionBox = document.createElement('div');
+                emotionBox.className = 'emotion-box gray';
+                emotionRow.appendChild(emotionBox);
+            }
+
+            emotionRowContainer.appendChild(emotionRow);
+
+            // 날짜 라벨 추가
+            const dateLabel = document.createElement('div');
+            dateLabel.className = 'date-label';
+            dateLabel.textContent = dateKey;
+            emotionRowContainer.appendChild(dateLabel);
+
+            emotionChart.appendChild(emotionRowContainer);
+        }
+    }
+
+    window.onload = function () {
+        setTimeout(() => {
+            printPDF();
+        }, 3000)
+    }
+
+    function printPDF() {
+        window.jsPDF = window.jspdf.jsPDF;
+        html2canvas(document.body).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 295; // A4 height in mm
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save('document.pdf');
+        });
+    }
+</script>
+
+</html>
