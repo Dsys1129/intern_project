@@ -1,0 +1,52 @@
+<!-- UserMapper.xml -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.intern_project.user.mapper.UserMapper">
+
+    <resultMap id="UserGroupResultMap" type="com.intern_project.user.domain.UserGroup">
+        <id property="id" column="id" />
+        <result property="email" column="email" />
+        <result property="password" column="password" />
+    </resultMap>
+    <resultMap id="UserResultMap" type="com.intern_project.user.domain.User">
+        <id property="id" column="id" />
+        <result property="groupId" column="group_id" />
+        <result property="image" column="image" />
+        <result property="name" column="name" />
+        <result property="gender" column="gender" />
+        <result property="birthDate" column="birth_date" />
+    </resultMap>
+
+<!--    계정 추가-->
+    <insert id="insertUserGroup">
+        INSERT INTO user_groups (email, password) VALUES (#{email}, #{password})
+    </insert>
+<!--    사용자 추가-->
+    <insert id="insertUser">
+        INSERT INTO users (group_id, image, name, gender, birth_date) VALUES (#{groupId}, #{image}, #{name}, #{gender}, #{birthDate})
+    </insert>
+<!--    검증 쿼리-->
+    <select id="findUserGroupByEmailAndPassword" resultMap="UserGroupResultMap">
+        SELECT * FROM user_groups WHERE email = #{email} AND password = #{password}
+    </select>
+<!--    로그인시 유저 리턴-->
+    <select id="findFirstUserByGroupId" resultMap="UserResultMap">
+        SELECT * FROM users WHERE group_id = #{groupId} LIMIT 1
+    </select>
+    <!-- 이메일 중복 검사 -->
+    <select id="findUserGroupByEmail" resultMap="UserGroupResultMap">
+        SELECT * FROM user_groups WHERE email = #{email}
+    </select>
+
+    <!-- 그룹 ID로 사용자 그룹 조회 -->
+    <select id="findUserGroupById" resultMap="UserGroupResultMap">
+        SELECT * FROM user_groups WHERE id = #{id}
+    </select>
+
+<!--    그룹 ID로 사용자 리스트 조회-->
+    <select id="findUserListByGroupId" resultMap="UserResultMap">
+        SELECT * FROM users WHERE group_id = #{groupId}
+    </select>
+
+
+</mapper>
+
