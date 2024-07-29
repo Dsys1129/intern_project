@@ -64,3 +64,5 @@ public interface SwaggerApi {
     @PostMapping("/changeUser")
     ResponseEntity<String> changeUser(@RequestBody ChangeUserRequest changeUserRequest);
 }
+
+//스웨거 작성
