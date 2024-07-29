@@ -1,11 +1,10 @@
 package com.intern_project.user.domain;
 
-public class LoginRequest {
-
+public class UserGroupDTO {
     private String email;
     private String password;
 
-    // Getters and Setters
+    // Getters and setters
     public String getEmail() {
         return email;
     }
@@ -21,5 +20,4 @@ public class LoginRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

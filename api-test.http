@@ -23,10 +23,10 @@ Content-Type: application/json
 # Test Case 3: Create a new user using the token from login
 POST http://localhost:8080/api/user/createUser
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzMjM2NiwiZXhwIjoxNzIyMjM1OTY2fQ.kCMRw1LSJ7Jkl1Z5gJC1cG17avtOF9M40NNwvWjuFPLGJ-OaiMIvQJyqYXXcAIolkAKkFkCW1xMVdKqFNYbJjA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJncm91cElkIjoyLCJ1c2VySWQiOjIsImlhdCI6MTcyMjIzNjAxOCwiZXhwIjoxNzIyMjM5NjE4fQ.00nykkDvp25hz9Z42ctgl8oMUnOsLfKmvnRgHFp580x9FmfscYE7YpaLdR_JbIoqAuSjX8zYjQiRi8_QesxsGA
 
 {
-  "name": "제갈동훈",
+  "name": "동훈",
   "gender": "male",
   "birthDate": "2023-03"
 }

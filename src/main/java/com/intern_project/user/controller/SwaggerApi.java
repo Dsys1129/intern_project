@@ -1,14 +1,12 @@
 package com.intern_project.user.controller;
 
 import com.intern_project.user.domain.*;
-import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -23,10 +21,12 @@ public interface SwaggerApi {
                     content = { @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Invalid input",
                     content = @Content),
+            @ApiResponse(responseCode = "409", description = "Email already in use",
+                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
     @PostMapping("/register")
-    void register(@RequestBody UserGroup userGroup);
+    void register(@RequestBody UserGroupDTO userGroupDTO);
 
     @Operation(summary = "Login with email and password")
     @ApiResponses(value = {
@@ -35,7 +35,7 @@ public interface SwaggerApi {
             @ApiResponse(responseCode = "401", description = "Invalid login credentials",
                     content = @Content) })
     @PostMapping("/login")
-    ResponseEntity<String> login(@RequestBody LoginRequest loginRequest);
+    ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO);
 
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {
@@ -46,7 +46,7 @@ public interface SwaggerApi {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
     @PostMapping("/createUser")
-    ResponseEntity<String> createUser(@RequestBody User user, @RequestAttribute("userinfo") UserInfo userInfo);
+    ResponseEntity<String> createUser(@RequestBody CreateUserRequestDTO user, @RequestAttribute("userinfo") UserInfo userInfo);
 
     @Operation(summary = "Get user list by group ID")
     @ApiResponses(value = {
@@ -62,7 +62,7 @@ public interface SwaggerApi {
             @ApiResponse(responseCode = "200", description = "Successfully changed user",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }) })
     @PostMapping("/changeUser")
-    ResponseEntity<String> changeUser(@RequestBody ChangeUserRequest changeUserRequest);
+    ResponseEntity<String> changeUser(@RequestBody ChangeUserRequestDTO changeUserRequestDTO);
 }
 
 //스웨거 작성

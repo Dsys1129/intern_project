@@ -1,6 +1,6 @@
 package com.intern_project.user.domain;
 
-public class ChangeUserRequest
+public class ChangeUserRequestDTO
 {
     private Long groupId;
     private Long userId;

@@ -1,5 +1,8 @@
 package com.intern_project.user.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
 public class UserGroup {
     private Long id;
     private String email;

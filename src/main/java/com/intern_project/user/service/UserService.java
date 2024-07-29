@@ -1,11 +1,12 @@
 package com.intern_project.user.service;
 
-import com.intern_project.user.domain.User;
-import com.intern_project.user.domain.UserGroup;
+import com.intern_project.user.domain.*;
 import com.intern_project.user.mapper.UserMapper;
 import com.intern_project.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,10 +19,13 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     // 사용자 그룹 계정 가입
-    public void register(UserGroup userGroup) {
-        if (isEmailDuplicate(userGroup.getEmail())) {
-            throw new RuntimeException("Email already in use");
+    public void register(UserGroupDTO userGroupDTO) {
+        if (isEmailDuplicate(userGroupDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
+        UserGroup userGroup = new UserGroup();
+        userGroup.setEmail(userGroupDTO.getEmail());
+        userGroup.setPassword(userGroupDTO.getPassword());
         userMapper.insertUserGroup(userGroup);
     }
 

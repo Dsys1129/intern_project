@@ -3,13 +3,11 @@ package com.intern_project.user.controller;
 import com.intern_project.user.domain.*;
 import com.intern_project.user.service.UserService;
 import com.intern_project.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,20 +26,20 @@ public class UserController implements SwaggerApi{
 
     //계정 정보 받아 회원가입
     @PostMapping("/register")
-    public void register(@RequestBody UserGroup userGroup) {
+    public void register(@RequestBody UserGroupDTO userGroup) {
         userService.register(userGroup);
     }
 
     // 계정으로 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         UserGroup userGroup;
         User user;
-        userGroup = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        userGroup = userService.authenticate(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
         if (userGroup == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
         }
-        user = userService.UserExist(loginRequest.getEmail(), loginRequest.getPassword());
+        user = userService.UserExist(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
         if (user != null) {
             Long groupId = userGroup.getId();
@@ -54,17 +52,23 @@ public class UserController implements SwaggerApi{
         }
     }
 
+
     //사용자 생성
     @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody User user, @RequestAttribute("userinfo") UserInfo userInfo) {
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequestDTO createUserRequestDTO, @RequestAttribute("userinfo") UserInfo userInfo) {
         try {
             Long groupId = userInfo.getGroupId();
             Long userId = userInfo.getUserId();
             UserGroup userGroup = userService.findUserGroupById(groupId);
             if (userGroup != null) {
-                user.setGroupId(userGroup.getId());
+                User user = new User();
+                user.setId(userId);
+                user.setGroupId(groupId);
+                user.setBirthDate(createUserRequestDTO.getBirthDate());
+                user.setGender(createUserRequestDTO.getGender());
+                user.setName(createUserRequestDTO.getName());
                 userService.createUser(user);
-                return ResponseEntity.ok(jwtUtil.createToken(userGroup.getId(), user.getId()));
+                return ResponseEntity.ok(jwtUtil.createToken(userGroup.getId(), userId));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token or UserGroup not found");
         } catch (RuntimeException e) {
@@ -85,8 +89,8 @@ public class UserController implements SwaggerApi{
 
 
     @PostMapping("/changeUser")
-    public ResponseEntity<String> changeUser(@RequestBody ChangeUserRequest changeUserRequest) {
-        String newToken = jwtUtil.createToken(changeUserRequest.getGroupId(), changeUserRequest.getUserId());
+    public ResponseEntity<String> changeUser(@RequestBody ChangeUserRequestDTO changeUserRequestDTO) {
+        String newToken = jwtUtil.createToken(changeUserRequestDTO.getGroupId(), changeUserRequestDTO.getUserId());
         return ResponseEntity.ok(newToken);
     }
 
