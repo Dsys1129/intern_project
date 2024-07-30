@@ -1,8 +1,8 @@
 package com.intern_project.user.controller;
 
+import com.intern_project.global.jwt.JwtUtil;
 import com.intern_project.user.domain.*;
 import com.intern_project.user.service.UserService;
-import com.intern_project.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

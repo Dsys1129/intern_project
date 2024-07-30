@@ -1,8 +1,9 @@
 package com.intern_project.user.service;
 
+import com.intern_project.global.jwt.JwtUtil;
 import com.intern_project.user.domain.*;
 import com.intern_project.user.mapper.UserMapper;
-import com.intern_project.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
