@@ -26,18 +26,18 @@ public class UserController implements SwaggerApi{
 
     //계정 정보 받아 회원가입
     @PostMapping("/register")
-    public void register(@RequestBody UserGroupDTO userGroup) {
-        userService.register(userGroup);
+    public void register(@RequestBody RegisterRequestDTO requestDTO) {
+        userService.register(requestDTO);
     }
 
-    // 계정으로 로그인
+    // 계정으로 로그인 예외처리추가
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         UserGroup userGroup;
         User user;
         userGroup = userService.authenticate(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
         if (userGroup == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
+            throw new IllegalStateException("Invalid email or password");
         }
         user = userService.UserExist(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
@@ -51,7 +51,6 @@ public class UserController implements SwaggerApi{
             return null;
         }
     }
-
 
     //사용자 생성
     @PostMapping("/createUser")

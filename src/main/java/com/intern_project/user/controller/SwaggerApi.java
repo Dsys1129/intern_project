@@ -26,7 +26,7 @@ public interface SwaggerApi {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
     @PostMapping("/register")
-    void register(@RequestBody UserGroupDTO userGroupDTO);
+    void register(@RequestBody RegisterRequestDTO requestDTO);
 
     @Operation(summary = "Login with email and password")
     @ApiResponses(value = {
