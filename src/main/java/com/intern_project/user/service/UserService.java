@@ -19,14 +19,20 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     // 사용자 그룹 계정 가입
-    public void register(UserGroupDTO userGroupDTO) {
-        if (isEmailDuplicate(userGroupDTO.getEmail())) {
+    public void register(RegisterRequestDTO requestDTO) {
+        if (isEmailDuplicate(requestDTO.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
         UserGroup userGroup = new UserGroup();
-        userGroup.setEmail(userGroupDTO.getEmail());
-        userGroup.setPassword(userGroupDTO.getPassword());
+        userGroup.setEmail(requestDTO.getEmail());
+        userGroup.setPassword(requestDTO.getPassword());
         userMapper.insertUserGroup(userGroup);
+        User user = new User();
+        user.setGender(requestDTO.getGender());
+        user.setName(requestDTO.getName());
+        user.setBirthDate(requestDTO.getBirthDate());
+        user.setGroupId(userMapper.findUserGroupByEmail(userGroup.getEmail()).getId());
+        userMapper.insertUser(user);
     }
 
     // 이메일 중복 검사
