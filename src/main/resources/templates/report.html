@@ -211,6 +211,13 @@
                 }]
             },
             options: {
+                    animation: {
+                        onComplete: function(chart) {
+                            if(chart.initial) {
+                                printPDF();
+                            }
+                        }
+                    },
                 plugins: {
                     legend: {
                         display: false
@@ -315,12 +322,6 @@
 
             emotionChart.appendChild(emotionRowContainer);
         }
-    }
-
-    window.onload = function () {
-        setTimeout(() => {
-            printPDF();
-        }, 3000)
     }
 
     function printPDF() {
