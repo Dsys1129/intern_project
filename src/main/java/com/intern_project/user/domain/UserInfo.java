@@ -1,5 +1,8 @@
 package com.intern_project.user.domain;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
 public class UserInfo {
     private Long userId;
     private Long groupId;

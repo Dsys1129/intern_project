@@ -1,14 +1,16 @@
 package com.intern_project.record.dto.request;
 
+import com.intern_project.global.validator.ValidDateRange;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Hidden
-@Setter
 @Getter
+@AllArgsConstructor
+@ValidDateRange
 public class RecordReportListRequestDTO {
 
     @NotNull(message = "통증 부위는 필수 입력 사항입니다.")

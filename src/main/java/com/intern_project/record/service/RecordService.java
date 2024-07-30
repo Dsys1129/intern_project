@@ -30,8 +30,8 @@ public class RecordService {
     private final RecordMapper recordMapper;
 
     @Transactional
-    public BaseResponseDTO createInitialRecord(InitialRecordRequestDTO requestDTO) {
-        Record record = requestDTO.toRecord(1L);
+    public BaseResponseDTO createInitialRecord(InitialRecordRequestDTO requestDTO, Long userId) {
+        Record record = requestDTO.toRecord(userId);
         recordMapper.saveRecord(record);
 
         RecordDetail recordDetail = requestDTO.toRecordDetail(record.getId(), LocalDateTime.now());
@@ -43,8 +43,19 @@ public class RecordService {
     }
 
     @Transactional
-    public BaseResponseDTO createFollowupRecord(Long recordGroupId, FollowupRecordRequestDTO requestDTO) {
+    public BaseResponseDTO createFollowupRecord(Long recordGroupId, FollowupRecordRequestDTO requestDTO, Long userId) {
+
+        Record findRecord = recordMapper.findRecordBy(recordGroupId);
+        if (findRecord == null) {
+            throw new IllegalArgumentException("해당하는 통증 기록이 없습니다.");
+        }
+
+        if (!findRecord.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
         RecordDetail recordDetail = requestDTO.toRecordDetail(recordGroupId, LocalDateTime.now());
+
         recordMapper.saveRecordDetail(recordDetail);
         List<Integer> symptoms = requestDTO.getSymptoms();
         recordMapper.saveSymptoms(recordDetail.getId(), symptoms);
@@ -56,34 +67,40 @@ public class RecordService {
         return BaseResponseDTO.createBaseResponseWithDataStatus200(symptomResults);
     }
 
-    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecords(RecordHistoryListRequestDTO requestDTO) {
-        List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.getRecordsByUserIdAndPainAreaAndYearMonth(1L, requestDTO.getPainArea(), requestDTO.getYearMonth());
+    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecords(RecordHistoryListRequestDTO requestDTO, Long userId) {
+        List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.getRecordsByUserIdAndPainAreaAndYearMonth(userId, requestDTO.getPainArea(), requestDTO.getYearMonth());
         return BaseResponseDTO.createBaseResponseWithDataStatus200(recordsByUserIdAndByYearMonth);
     }
 
-    public BaseResponseDTO<RecordDetailResponseDTO> getRecordDetail(Long recordId) {
+    public BaseResponseDTO<RecordDetailResponseDTO> getRecordDetail(Long recordId, Long userId) {
         RecordDetailResponseDTO recordDetail = recordMapper.getRecordsByRecordId(recordId);
+        if (recordDetail == null) {
+            throw new IllegalArgumentException("해당하는 통증 기록이 없습니다.");
+        }
+        if (!recordDetail.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
         return BaseResponseDTO.createBaseResponseWithDataStatus200(recordDetail);
     }
 
-    public BaseResponseDTO<RecordGroupResponseDTO> getRecordGroups() {
-        List<RecordGroupListResponseDTO> recordGroupsByUserId = recordMapper.getRecordGroupsByUserId(1L);
-        RecordGroupResponseDTO result = recordMapper.getTotalPainRecordsAndLastDateByUserId(1L);
+    public BaseResponseDTO<RecordGroupResponseDTO> getRecordGroups(Long userId) {
+        List<RecordGroupListResponseDTO> recordGroupsByUserId = recordMapper.getRecordGroupsByUserId(userId);
+        RecordGroupResponseDTO result = recordMapper.getTotalPainRecordsAndLastDateByUserId(userId);
         result.setGroups(recordGroupsByUserId);
 
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }
 
-    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecordReportList(RecordReportListRequestDTO requestDTO) {
+    public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecordReportList(RecordReportListRequestDTO requestDTO, Long userId) {
         List<RecordHistoryListResponseDTO> result = recordMapper.
-                getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(1L, requestDTO.getPainArea(),
+                getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(userId, requestDTO.getPainArea(),
                         requestDTO.getStartDate(), requestDTO.getEndDate());
 
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }
 
-    public BaseResponseDTO<List<Symptom>> getLastSelectedSymptoms(Long groupId) {
-        List<Symptom> result = recordMapper.getLastSelectedSymptomsByGroupIdAndUserId(groupId, 1L);
+    public BaseResponseDTO<List<Symptom>> getLastSelectedSymptoms(Long recordGroupId, Long userId) {
+        List<Symptom> result = recordMapper.getLastSelectedSymptomsByGroupIdAndUserId(recordGroupId, userId);
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
     }
 }

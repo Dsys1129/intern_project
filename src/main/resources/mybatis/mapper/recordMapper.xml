@@ -6,7 +6,7 @@
 <mapper namespace="com.intern_project.record.mapper.RecordMapper">
     <insert id="saveRecord" parameterType="object">
         insert into pain_record_groups (user_id, pain_area, pain_area_detail, start_date, pain_start_pattern,
-                                        pain_duration)
+        pain_duration)
         values (#{userId}, #{painArea}, #{painAreaDetail}, #{painStartDateTime}, #{painStartPattern}, #{painDuration});
         <selectKey resultType="Long" keyProperty="id" keyColumn="id" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -17,13 +17,15 @@
         INSERT INTO record_symptoms (symptom_id, record_detail_id)
         VALUES
         <foreach collection="symptoms" item="symptom" separator=",">
-        (#{symptom}, #{recordDetailId})
+            (#{symptom}, #{recordDetailId})
         </foreach>
     </insert>
 
     <insert id="saveRecordDetail">
-        insert into pain_record (record_group_id, pain_intensity, pain_mood, created_at, note, pain_start_time, pain_end_time, is_initial_record)
-        values (#{recordGroupId}, #{painIntensity}, #{painMood}, #{createdAt}, #{note}, #{painStartTime}, #{painEndTime}, #{isInitialRecord});
+        insert into pain_record (record_group_id, pain_intensity, pain_mood, created_at, note, pain_start_time,
+        pain_end_time, is_initial_record)
+        values (#{recordGroupId}, #{painIntensity}, #{painMood}, #{createdAt}, #{note}, #{painStartTime},
+        #{painEndTime}, #{isInitialRecord});
         <selectKey resultType="Long" keyProperty="id" keyColumn="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -34,7 +36,8 @@
         FROM symptoms
     </select>
 
-    <select id="getRecordsByUserIdAndPainAreaAndYearMonth" resultType="com.intern_project.record.dto.response.RecordHistoryListResponseDTO">
+    <select id="getRecordsByUserIdAndPainAreaAndYearMonth"
+            resultType="com.intern_project.record.dto.response.RecordHistoryListResponseDTO">
         SELECT pr.id, pr.note, pr.pain_intensity, pr.pain_mood, pr.created_at
         FROM pain_record pr
         INNER JOIN pain_record_groups prg ON pr.record_group_id = prg.id
@@ -46,41 +49,44 @@
     </select>
 
     <select id="getRecordsByRecordId" resultType="com.intern_project.record.dto.response.RecordDetailResponseDTO">
-        SELECT pr.id, prg.pain_area, prg.pain_area_detail, pr.pain_intensity, pr.note, pr.pain_start_time,
-               pr.pain_end_time, prg.start_date, prg.pain_duration
+        SELECT pr.id,
+               prg.user_id,
+               prg.pain_area,
+               prg.pain_area_detail,
+               pr.pain_intensity,
+               pr.note,
+               pr.pain_start_time,
+               pr.pain_end_time,
+               prg.start_date,
+               prg.pain_duration
         FROM pain_record pr
                  INNER JOIN pain_record_groups prg ON pr.record_group_id = prg.id
         WHERE pr.id = #{recordId}
     </select>
 
     <select id="getRecordGroupsByUserId" resultType="com.intern_project.record.dto.response.RecordGroupListResponseDTO">
-        SELECT prg.id AS record_group_id,
+        SELECT prg.id             AS record_group_id,
                prg.pain_area,
-               COUNT(pr.id) AS total_detail_count,
+               COUNT(pr.id)       AS total_detail_count,
                MAX(pr.created_at) AS last_recorded_date
-        FROM
-            pain_record_groups prg
-                INNER JOIN
-            pain_record pr ON prg.id = pr.record_group_id
+        FROM pain_record_groups prg
+                 INNER JOIN
+             pain_record pr ON prg.id = pr.record_group_id
         WHERE prg.user_id = #{userId}
-        GROUP BY
-            prg.id;
+        GROUP BY prg.id;
     </select>
 
     <select id="getTotalPainRecordsAndLastDateByUserId"
             resultType="com.intern_project.record.dto.response.RecordGroupResponseDTO">
-        SELECT
-            u.name,
-            COUNT(pr.id) AS total_record_count,
-            DATEDIFF(CURDATE(), MAX(pr.created_at)) AS days_since_last_record
-        FROM
-            pain_record_groups prg
-                INNER JOIN
-            pain_record pr ON prg.id = pr.record_group_id
-            INNER JOIN users u ON prg.user_id = u.id
+        SELECT u.name,
+               COUNT(pr.id)                            AS total_record_count,
+               DATEDIFF(CURDATE(), MAX(pr.created_at)) AS days_since_last_record
+        FROM pain_record_groups prg
+                 INNER JOIN
+             pain_record pr ON prg.id = pr.record_group_id
+                 INNER JOIN users u ON prg.user_id = u.id
         WHERE user_id = #{userId}
-        GROUP BY
-            prg.user_id;
+        GROUP BY prg.user_id;
     </select>
 
     <select id="getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate"
@@ -96,29 +102,26 @@
     </select>
 
     <select id="getLastSelectedSymptomsByGroupIdAndUserId" resultType="com.intern_project.record.domain.Symptom">
-        SELECT
-            s.id,
-            s.symptom
-        FROM
-            symptoms s
-                INNER JOIN
-            record_symptoms rs ON s.id = rs.symptom_id
-                INNER JOIN
-            pain_record pr ON rs.record_detail_id = pr.id
-                INNER JOIN
-            pain_record_groups prg ON pr.record_group_id = prg.id
-        WHERE
-            pr.id = (
-                SELECT
-                    pr_sub.id
-                FROM
-                    pain_record pr_sub
-                WHERE
-                    pr_sub.record_group_id = #{groupId}
-                ORDER BY
-                    pr_sub.created_at DESC
+        SELECT s.id,
+               s.symptom
+        FROM symptoms s
+                 INNER JOIN
+             record_symptoms rs ON s.id = rs.symptom_id
+                 INNER JOIN
+             pain_record pr ON rs.record_detail_id = pr.id
+                 INNER JOIN
+             pain_record_groups prg ON pr.record_group_id = prg.id
+        WHERE pr.id = (SELECT pr_sub.id
+                       FROM pain_record pr_sub
+                       WHERE pr_sub.record_group_id = #{groupId}
+                       ORDER BY pr_sub.created_at DESC
             LIMIT 1
             )
           AND prg.user_id = #{userId};
+    </select>
+    <select id="findRecordBy" resultType="com.intern_project.record.domain.Record">
+        SELECT id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
+        FROM pain_record_groups
+        WHERE id = #{recordGroupId};
     </select>
 </mapper>

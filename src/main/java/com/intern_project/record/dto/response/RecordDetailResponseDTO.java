@@ -8,6 +8,7 @@ import java.time.LocalTime;
 @Getter
 public class RecordDetailResponseDTO {
     private Long id;
+    private Long userId;
     private String painArea;
     private Integer painAreaDetail;
     private Integer painIntensity;
@@ -17,8 +18,9 @@ public class RecordDetailResponseDTO {
     private LocalDateTime painStartDateTime;
     private String painDuration;
 
-    public RecordDetailResponseDTO(Long id, String painArea, Integer painAreaDetail, Integer painIntensity, String note, LocalTime painStartTime, LocalTime painEndTime, LocalDateTime painStartDateTime, String painDuration) {
+    public RecordDetailResponseDTO(Long id, Long userId,String painArea, Integer painAreaDetail, Integer painIntensity, String note, LocalTime painStartTime, LocalTime painEndTime, LocalDateTime painStartDateTime, String painDuration) {
         this.id = id;
+        this.userId = userId;
         this.painArea = painArea;
         this.painAreaDetail = painAreaDetail;
         this.painIntensity = painIntensity;

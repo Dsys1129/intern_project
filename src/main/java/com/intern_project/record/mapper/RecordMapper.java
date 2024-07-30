@@ -32,4 +32,6 @@ public interface RecordMapper {
     List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(Long userId, String painArea, String startDate, String endDate);
 
     List<Symptom> getLastSelectedSymptomsByGroupIdAndUserId(Long groupId, Long userId);
+
+    Record findRecordBy(Long recordGroupId);
 }
