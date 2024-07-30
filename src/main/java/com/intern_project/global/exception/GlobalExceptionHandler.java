@@ -16,31 +16,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BindException.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(BindException e) {
-        log.error("BindException : {}", e);
-        Map<String, String> errors = new HashMap<>();
-
-        e.getBindingResult().getFieldErrors().forEach(fieldError ->
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage())
-        );
-
-        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Failed", errors);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException : {}", e);
 
         Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
-        e.getBindingResult().getFieldErrors().forEach(fieldError ->
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage())
-        );
+        e.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
 
-        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Failed", errors);
+        e.getBindingResult().getGlobalErrors().forEach(error ->
+                errors.put(error.getCode(), error.getDefaultMessage()));
+
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Exception", errors);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

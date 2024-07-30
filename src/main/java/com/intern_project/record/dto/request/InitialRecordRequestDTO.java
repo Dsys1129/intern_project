@@ -1,5 +1,6 @@
 package com.intern_project.record.dto.request;
 
+import com.intern_project.global.validator.CustomPastOrPresent;
 import com.intern_project.record.domain.Record;
 import com.intern_project.record.domain.RecordDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Schema(description = "새로운 통증 기록 생성을 요청하는 DTO")
@@ -25,14 +27,15 @@ public class InitialRecordRequestDTO {
     private List<Integer> symptoms;
 
     @Schema(description = "통증 위치", minimum = "0", defaultValue = "1")
-    @Min(value = 0 , message = "통증 위치는 음수일 수 없습니다.")
+    @Min(value = 0, message = "통증 위치는 음수일 수 없습니다.")
     @NotNull(message = "통증 위치는 필수 입력 사항입니다.")
     private Integer painAreaDetail;
 
-    @Schema(description = "통증 시작 날짜", defaultValue = "2024-07-25T00:00:00")
+    @Schema(description = "통증 시작 날짜", defaultValue = "2024-07-25 12:30:00")
     @NotNull(message = "통증 시작 날짜는 필수 입력 사항입니다.")
-    @PastOrPresent(message = "통증 시작 날짜는 현재 혹은 과거의 시간만 가능합니다.")
-    private LocalDateTime painStartDateTime;
+    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}", message = "통증 시작 날짜는 'yyyy-MM-dd HH:mm' 형식이어야 합니다.")
+    @CustomPastOrPresent
+    private String painStartDateTime;
 
     @Schema(description = "통증의 정도", minimum = "0", maximum = "10")
     @Max(value = 10, message = "통증 정도는 0~10 입니다.")
@@ -41,7 +44,7 @@ public class InitialRecordRequestDTO {
     private Integer painIntensity;
 
     @Min(value = 0, message = "통증 시작 양상은 음수일 수 없습니다.")
-    @Schema(description = "통증 시작 양상", examples = {"갑자기","점진적으로"}, allowableValues = {"갑자기","점진적으로"})
+    @Schema(description = "통증 시작 양상", examples = {"갑자기", "점진적으로"}, allowableValues = {"갑자기", "점진적으로"})
     @NotNull(message = "통증 시작 양상은 필수 입력 사항입니다.")
     private Integer painStartPattern;
 
@@ -61,7 +64,7 @@ public class InitialRecordRequestDTO {
     private String note;
 
     public Record toRecord(Long userId) {
-        return new Record(userId, painArea, painAreaDetail, painStartDateTime, painStartPattern, painDuration);
+        return new Record(userId, painArea, painAreaDetail, LocalDateTime.parse(painStartDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), painStartPattern, painDuration);
     }
 
     public RecordDetail toRecordDetail(Long recordGroupId, LocalDateTime createdAt) {
