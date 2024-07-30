@@ -33,22 +33,11 @@ public class UserController implements SwaggerApi{
     // 계정으로 로그인 예외처리추가
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        UserGroup userGroup;
-        User user;
-        userGroup = userService.authenticate(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
-        if (userGroup == null) {
-            throw new IllegalStateException("Invalid email or password");
-        }
-        user = userService.UserExist(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
-
-        if (user != null) {
-            Long groupId = userGroup.getId();
-            Long userId = user.getId();
-            String token = jwtUtil.createToken(groupId, userId);
+        String token = userService.login(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
+        if (token != null) {
             return ResponseEntity.ok(token);
         } else {
-            // 유저 없음 메세지와 null user 생성해서 보내기
-            return null;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User does not exist");
         }
     }
 
