@@ -1,18 +1,17 @@
 package com.intern_project.record.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
+@NoArgsConstructor
 @Data
 public class RecordDetail {
     private Long id;
 
     private Long recordGroupId;
-
-    private List<Integer> symptoms;
 
     private LocalTime painStartTime;
 
@@ -28,9 +27,8 @@ public class RecordDetail {
 
     private LocalDateTime createdAt;
 
-    private RecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, boolean isInitialRecord, LocalDateTime createdAt) {
+    private RecordDetail(Long recordGroupId, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, boolean isInitialRecord, LocalDateTime createdAt) {
         this.recordGroupId = recordGroupId;
-        this.symptoms = symptoms;
         this.painStartTime = painStartTime;
         this.painEndTime = painEndTime;
         this.painIntensity = painIntensity;
@@ -40,11 +38,11 @@ public class RecordDetail {
         this.createdAt = createdAt;
     }
 
-    public static RecordDetail createInitialRecordDetail(Long recordGroupId, List<Integer> symptoms, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
-        return new RecordDetail(recordGroupId, symptoms, null, null, painIntensity, painMood, note, true, createdAt);
+    public static RecordDetail createInitialRecordDetail(Long recordGroupId, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
+        return new RecordDetail(recordGroupId, null, null, painIntensity, painMood, note, true, createdAt);
     }
 
-    public static RecordDetail createFollowupRecordDetail(Long recordGroupId, List<Integer> symptoms, LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
-        return new RecordDetail(recordGroupId, symptoms, painStartTime, painEndTime, painIntensity, painMood, note, false, createdAt);
+    public static RecordDetail createFollowupRecordDetail(Long recordGroupId,  LocalTime painStartTime, LocalTime painEndTime, Integer painIntensity, Integer painMood, String note, LocalDateTime createdAt){
+        return new RecordDetail(recordGroupId,  painStartTime, painEndTime, painIntensity, painMood, note, false, createdAt);
     }
 }

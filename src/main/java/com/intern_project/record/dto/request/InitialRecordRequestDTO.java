@@ -68,6 +68,6 @@ public class InitialRecordRequestDTO {
     }
 
     public RecordDetail toRecordDetail(Long recordGroupId, LocalDateTime createdAt) {
-        return RecordDetail.createInitialRecordDetail(recordGroupId, symptoms, painIntensity, painMood, note, createdAt);
+        return RecordDetail.createInitialRecordDetail(recordGroupId,  painIntensity, painMood, note, createdAt);
     }
 }

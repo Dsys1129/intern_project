@@ -49,6 +49,6 @@ public class FollowupRecordRequestDTO {
     private String note;
 
     public RecordDetail toRecordDetail(Long recordGroupId, LocalDateTime createdAt) {
-        return RecordDetail.createFollowupRecordDetail(recordGroupId, symptoms, painStartTime, painEndTime, painIntensity, painMood, note, createdAt);
+        return RecordDetail.createFollowupRecordDetail(recordGroupId, painStartTime, painEndTime, painIntensity, painMood, note, createdAt);
     }
 }
