@@ -23,7 +23,7 @@ public class CustomPastOrPresentValidator implements ConstraintValidator<CustomP
             return !parsedDate.isAfter(LocalDateTime.now());
         } catch (DateTimeParseException e) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("잘못된 날짜 형식입니다.")
+            constraintValidatorContext.buildConstraintViolationWithTemplate("통증 시작 날짜는 'yyyy-MM-dd HH:mm' 형식이어야 합니다.")
                     .addConstraintViolation();
             return false;
         }

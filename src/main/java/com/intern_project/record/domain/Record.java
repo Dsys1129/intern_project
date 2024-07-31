@@ -1,10 +1,12 @@
 package com.intern_project.record.domain;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
+@NoArgsConstructor
+@Data
 public class Record {
 
     private Long id;

@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @Hidden
-@Getter
+@Data
 @AllArgsConstructor
 @ValidDateRange
 public class RecordReportListRequestDTO {

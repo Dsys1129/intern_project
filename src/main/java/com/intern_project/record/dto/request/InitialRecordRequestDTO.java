@@ -6,7 +6,7 @@ import com.intern_project.record.domain.RecordDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Schema(description = "새로운 통증 기록 생성을 요청하는 DTO")
 @AllArgsConstructor
-@Getter
+@Data
 public class InitialRecordRequestDTO {
 
     @Schema(description = "통증 부위", defaultValue = "손/손가락")
@@ -31,7 +31,7 @@ public class InitialRecordRequestDTO {
     @NotNull(message = "통증 위치는 필수 입력 사항입니다.")
     private Integer painAreaDetail;
 
-    @Schema(description = "통증 시작 날짜", defaultValue = "2024-07-25 12:30:00")
+    @Schema(description = "통증 시작 날짜", defaultValue = "2024-07-25 12:30")
     @NotNull(message = "통증 시작 날짜는 필수 입력 사항입니다.")
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}", message = "통증 시작 날짜는 'yyyy-MM-dd HH:mm' 형식이어야 합니다.")
     @CustomPastOrPresent
@@ -44,12 +44,12 @@ public class InitialRecordRequestDTO {
     private Integer painIntensity;
 
     @Min(value = 0, message = "통증 시작 양상은 음수일 수 없습니다.")
-    @Schema(description = "통증 시작 양상", examples = {"갑자기", "점진적으로"}, allowableValues = {"갑자기", "점진적으로"})
+    @Schema(description = "통증 시작 양상", defaultValue = "0")
     @NotNull(message = "통증 시작 양상은 필수 입력 사항입니다.")
     private Integer painStartPattern;
 
     @Min(value = 0, message = "통증 지속 시간은 음수일 수 없습니다.")
-    @Schema(description = "통증 지속 시간", allowableValues = {"0", "1", "2", "3"})
+    @Schema(description = "통증 지속 시간", defaultValue = "0", allowableValues = {"0", "1", "2", "3"})
     @NotNull(message = "통증 지속 시간은 필수 입력 사항입니다.")
     private Integer painDuration;
 
@@ -59,7 +59,7 @@ public class InitialRecordRequestDTO {
     private Integer painMood;
 
     @Schema(description = "메모", defaultValue = "손끝이 저림")
-    @Size(min = 1, max = 100, message = "메모는 최소 1자에서 100자 입니다.")
+    @Size(max = 100, message = "메모는 최소 1자에서 100자 입니다.")
     @NotBlank(message = "메모는 필수 입력 사항입니다.")
     private String note;
 
@@ -68,6 +68,6 @@ public class InitialRecordRequestDTO {
     }
 
     public RecordDetail toRecordDetail(Long recordGroupId, LocalDateTime createdAt) {
-        return RecordDetail.createInitialRecordDetail(recordGroupId, symptoms, painIntensity, painMood, note, createdAt);
+        return RecordDetail.createInitialRecordDetail(recordGroupId,  painIntensity, painMood, note, createdAt);
     }
 }

@@ -34,4 +34,6 @@ public interface RecordMapper {
     List<Symptom> getLastSelectedSymptomsByGroupIdAndUserId(Long groupId, Long userId);
 
     Record findRecordBy(Long recordGroupId);
+
+    RecordDetail findRecordDetailBy(Long recordDetailId);
 }

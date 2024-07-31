@@ -4,13 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.intern_project.record.mapper.RecordMapper">
-    <insert id="saveRecord" parameterType="object">
+    <insert id="saveRecord" parameterType="object" useGeneratedKeys="true" keyProperty="id">
         insert into pain_record_groups (user_id, pain_area, pain_area_detail, start_date, pain_start_pattern,
         pain_duration)
         values (#{userId}, #{painArea}, #{painAreaDetail}, #{painStartDateTime}, #{painStartPattern}, #{painDuration});
-        <selectKey resultType="Long" keyProperty="id" keyColumn="id" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
     </insert>
 
     <insert id="saveSymptoms">
@@ -21,15 +18,18 @@
         </foreach>
     </insert>
 
-    <insert id="saveRecordDetail">
-        insert into pain_record (record_group_id, pain_intensity, pain_mood, created_at, note, pain_start_time,
+    <insert id="saveRecordDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pain_record (record_group_id, pain_intensity, pain_mood, created_at, note, pain_start_time,
         pain_end_time, is_initial_record)
-        values (#{recordGroupId}, #{painIntensity}, #{painMood}, #{createdAt}, #{note}, #{painStartTime},
+        VALUES (#{recordGroupId}, #{painIntensity}, #{painMood}, #{createdAt}, #{note}, #{painStartTime},
         #{painEndTime}, #{isInitialRecord});
-        <selectKey resultType="Long" keyProperty="id" keyColumn="id" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
     </insert>
+
+    <select id = "findRecordDetailBy" parameterType="Long" resultType="com.intern_project.record.domain.RecordDetail">
+        SELECT id, record_group_id, pain_start_time, pain_end_time, pain_intensity, pain_mood, note, is_initial_record, created_at
+        FROM pain_record
+        WHERE id = #{recordDetailId}
+    </select>
 
     <select id="getSymptoms" resultType="com.intern_project.record.domain.Symptom">
         SELECT id, symptom
@@ -120,7 +120,7 @@
           AND prg.user_id = #{userId};
     </select>
     <select id="findRecordBy" resultType="com.intern_project.record.domain.Record">
-        SELECT id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
+        SELECT id, user_id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
         FROM pain_record_groups
         WHERE id = #{recordGroupId};
     </select>
