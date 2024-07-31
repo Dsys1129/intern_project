@@ -1,9 +1,11 @@
 package com.intern_project.record.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 public class Record {
 

@@ -120,7 +120,7 @@
           AND prg.user_id = #{userId};
     </select>
     <select id="findRecordBy" resultType="com.intern_project.record.domain.Record">
-        SELECT id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
+        SELECT id, user_id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
         FROM pain_record_groups
         WHERE id = #{recordGroupId};
     </select>
