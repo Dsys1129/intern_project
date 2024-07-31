@@ -1,20 +1,20 @@
 package com.intern_project.record.dto.request;
 
-import com.intern_project.record.domain.RecordDetail;
 import com.intern_project.global.validator.ValidPainTimeRange;
+import com.intern_project.record.domain.RecordDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @Schema(description = "통증 기록 생성을 요청하는 DTO")
-@AllArgsConstructor
 @ValidPainTimeRange
-@Getter
+@AllArgsConstructor
+@Data
 public class FollowupRecordRequestDTO {
 
     @Schema(description = "통증 증상", minimum = "0", defaultValue = "[0]")
@@ -23,12 +23,12 @@ public class FollowupRecordRequestDTO {
     private List<Integer> symptoms;
 
     @Schema(description = "통증 시작 시간", pattern = "HH:mm:ss", defaultValue = "11:57:33")
-    @PastOrPresent(message = "유효하지 않은 시간입니다.")
+//    @PastOrPresent(message = "유효하지 않은 시간입니다.")
     @NotNull(message = "통증 시작 시간은 필수 입력 사항입니다.")
     private LocalTime painStartTime;
 
     @Schema(description = "통증 종료 시간", pattern = "HH:mm:ss", defaultValue = "12:00:33")
-    @PastOrPresent(message = "유효하지 않은 시간입니다.")
+//    @PastOrPresent(message = "유효하지 않은 시간입니다.")
     @NotNull(message = "통증 종료 시간은 필수 입력 사항입니다.")
     private LocalTime painEndTime;
 
@@ -44,7 +44,7 @@ public class FollowupRecordRequestDTO {
     private Integer painMood;
 
     @Schema(description = "메모", defaultValue = "손끝이 저림")
-    @Size(min = 1, max = 100, message = "메모는 최소 1자에서 100자 입니다.")
+    @Size(max = 100, message = "메모는 최소 1자에서 100자 입니다.")
     @NotBlank(message = "메모는 필수 입력 사항입니다.")
     private String note;
 

@@ -3,12 +3,10 @@ package com.intern_project.record.dto.request;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Hidden
-@Getter
-@Setter
+@Data
 public class RecordHistoryListRequestDTO {
 
     private String painArea;
