@@ -21,7 +21,7 @@ public interface RecordMapper {
 
     List<Symptom> getSymptoms();
 
-    List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaAndYearMonth(Long userId, String painArea, String yearMonth);
+    List<RecordHistoryListResponseDTO> findRecordHistories(Long userId, String painArea, String yearMonth);
 
     RecordDetailResponseDTO getRecordsByRecordId(Long recordId);
 
@@ -29,7 +29,7 @@ public interface RecordMapper {
 
     RecordGroupResponseDTO getTotalPainRecordsAndLastDateByUserId(Long userId);
 
-    List<RecordHistoryListResponseDTO> getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(Long userId, String painArea, String startDate, String endDate);
+    List<RecordHistoryListResponseDTO> findRecordReports(Long userId, String painArea, String startDate, String endDate);
 
     List<Symptom> getLastSelectedSymptomsByGroupIdAndUserId(Long groupId, Long userId);
 

@@ -14,7 +14,6 @@ import com.intern_project.user.domain.UserInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +77,7 @@ public class RecordController implements SwaggerApi{
         return ResponseEntity.status(response.getCode()).body(response);
     }
 
+    @Override
     @GetMapping("/records/{groupId}/symptoms")
     public ResponseEntity<BaseResponseDTO<List<Symptom>>> getLastSelectedSymptoms(@PathVariable(name = "groupId") Long recordGroupId, UserInfo userInfo) {
         BaseResponseDTO response = recordService.getLastSelectedSymptoms(recordGroupId, userInfo.getUserId());

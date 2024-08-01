@@ -23,12 +23,10 @@ public class FollowupRecordRequestDTO {
     private List<Integer> symptoms;
 
     @Schema(description = "통증 시작 시간", pattern = "HH:mm:ss", defaultValue = "11:57:33")
-//    @PastOrPresent(message = "유효하지 않은 시간입니다.")
     @NotNull(message = "통증 시작 시간은 필수 입력 사항입니다.")
     private LocalTime painStartTime;
 
     @Schema(description = "통증 종료 시간", pattern = "HH:mm:ss", defaultValue = "12:00:33")
-//    @PastOrPresent(message = "유효하지 않은 시간입니다.")
     @NotNull(message = "통증 종료 시간은 필수 입력 사항입니다.")
     private LocalTime painEndTime;
 
