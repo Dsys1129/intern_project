@@ -36,7 +36,7 @@
         FROM symptoms
     </select>
 
-    <select id="getRecordsByUserIdAndPainAreaAndYearMonth"
+    <select id="findRecordHistories"
             resultType="com.intern_project.record.dto.response.RecordHistoryListResponseDTO">
         SELECT pr.id, pr.note, pr.pain_intensity, pr.pain_mood, pr.created_at
         FROM pain_record pr
@@ -81,15 +81,14 @@
         SELECT u.name,
                COUNT(pr.id)                            AS total_record_count,
                DATEDIFF(CURDATE(), MAX(pr.created_at)) AS days_since_last_record
-        FROM pain_record_groups prg
-                 INNER JOIN
-             pain_record pr ON prg.id = pr.record_group_id
-                 INNER JOIN users u ON prg.user_id = u.id
-        WHERE user_id = #{userId}
-        GROUP BY prg.user_id;
+        FROM users u
+                 LEFT JOIN pain_record_groups prg ON u.id = prg.user_id
+                 LEFT JOIN pain_record pr ON prg.id = pr.record_group_id
+        WHERE u.id = #{userId}
+        GROUP BY u.id;
     </select>
 
-    <select id="getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate"
+    <select id="findRecordReports"
             resultType="com.intern_project.record.dto.response.RecordHistoryListResponseDTO">
         SELECT pr.id, pr.note, pr.pain_intensity, pr.pain_mood, pr.created_at
         FROM pain_record pr
@@ -120,7 +119,7 @@
           AND prg.user_id = #{userId};
     </select>
     <select id="findRecordBy" resultType="com.intern_project.record.domain.Record">
-        SELECT id, user_id, pain_area, pain_area_detail, start_date, pain_start_pattern, pain_duration
+        SELECT id, user_id, pain_area, pain_area_detail, start_date as pain_start_date_time, pain_start_pattern, pain_duration
         FROM pain_record_groups
         WHERE id = #{recordGroupId};
     </select>

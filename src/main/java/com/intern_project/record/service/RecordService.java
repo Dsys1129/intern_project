@@ -68,7 +68,7 @@ public class RecordService {
     }
 
     public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecords(RecordHistoryListRequestDTO requestDTO, Long userId) {
-        List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.getRecordsByUserIdAndPainAreaAndYearMonth(userId, requestDTO.getPainArea(), requestDTO.getYearMonth());
+        List<RecordHistoryListResponseDTO> recordsByUserIdAndByYearMonth = recordMapper.findRecordHistories(userId, requestDTO.getPainArea(), requestDTO.getYearMonth());
         return BaseResponseDTO.createBaseResponseWithDataStatus200(recordsByUserIdAndByYearMonth);
     }
 
@@ -93,7 +93,7 @@ public class RecordService {
 
     public BaseResponseDTO<List<RecordHistoryListResponseDTO>> getRecordReportList(RecordReportListRequestDTO requestDTO, Long userId) {
         List<RecordHistoryListResponseDTO> result = recordMapper.
-                getRecordsByUserIdAndPainAreaBetweenStartDateAndEndDate(userId, requestDTO.getPainArea(),
+                findRecordReports(userId, requestDTO.getPainArea(),
                         requestDTO.getStartDate(), requestDTO.getEndDate());
 
         return BaseResponseDTO.createBaseResponseWithDataStatus200(result);
