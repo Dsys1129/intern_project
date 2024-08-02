@@ -46,6 +46,7 @@
             AND prg.pain_area = #{painArea}
         </if>
         AND DATE_FORMAT(pr.created_at, '%Y-%m') = #{yearMonth}
+        ORDER BY pr.created_at DESC
     </select>
 
     <select id="getRecordsByRecordId" resultType="com.intern_project.record.dto.response.RecordDetailResponseDTO">
@@ -98,6 +99,7 @@
             AND prg.pain_area = #{painArea}
         </if>
         AND DATE_FORMAT(pr.created_at, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+        ORDER BY pr.created_at DESC
     </select>
 
     <select id="getLastSelectedSymptomsByGroupIdAndUserId" resultType="com.intern_project.record.domain.Symptom">
